@@ -23,11 +23,6 @@ A simple Mapi driver for Delphi is created.
 - [ ] mapi_unquote  
 - [ ] mapi_output  
 - [ ] mapi_stream_into  
-- [ ] mapi_profile  
-- [ ] mapi_timeout  
-- [ ] mapi_trace  
-- [ ] mapi_get_trace  
-- [ ] mapi_log  
 
 ### Todo
 
@@ -61,6 +56,10 @@ A simple Mapi driver for Delphi is created.
 - [ ] mapi_get_motd  
 - [ ] mapi_get_lang  
 - [ ] mapi_get_len  
+- [ ] mapi_trace  
+- [ ] mapi_get_trace  
+- [ ] mapi_log  
+- [ ] mapi_timeout  
 
 ### Done ✓
 
@@ -75,4 +74,5 @@ A simple Mapi driver for Delphi is created.
 - [ ] mapi_explain_result  
 - [ ] mapi_explain_query  
 - [ ] mapi_explain  
+- [ ] mapi_profile  
 

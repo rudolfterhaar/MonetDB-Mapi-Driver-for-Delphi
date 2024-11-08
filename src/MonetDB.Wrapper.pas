@@ -23,7 +23,6 @@ type
       function fgetFieldCount:integer;
       function FgetField(fieldno:integer):tfield;
       function fgetFieldByName(name:string):TField;
-
     public
       Function ColumnLength(fieldno:integer):integer;
       property FieldCount:integer read fgetFieldCount;
@@ -71,12 +70,16 @@ type
        fpassword:string;
        fdbname:string;
        fport:integer;
+       ftimeout:cardinal;
        function fgetconnectionstatus: boolean;
        function getMapiError: MapiMsg;
        function getMapiErrorString:string;
        procedure Connect;
        procedure SetConnected(value:boolean);
        function fgetLang:string;
+       function fgetTrace:boolean;
+       procedure fsetTrace(value:boolean);
+       procedure setTimeout(milliseconds:cardinal);
      public
          function ServerMessage:string;
          function Ping:MapiMsg;       //Test availability of the server. Returns zero upon success.
@@ -85,6 +88,12 @@ type
 
         function OpenQuery(sql:string):TMonetDBQuery;        //You need to free this object after use..
         function ExecSQL(sql:string):integer;  //returns rows affected
+
+        function SaveLogfile(filename:string):boolean;
+
+        property Trace    :boolean read fgetTrace write fsetTrace;
+
+        property timeout  :cardinal read ftimeout write settimeout;
 
         property lang     : string  read fgetlang;
         property dbname   : string  read fdbname   write fdbname;
@@ -145,6 +154,24 @@ function TMonetDBConnection.fgetLang: string;
     result:=utf8tostring(libmapi.mapi_get_lang(self.mapiref));
   end;
 
+function TMonetDBConnection.fgetTrace: boolean;
+begin
+  result:=libmapi.mapi_get_trace(self.mapiref);
+end;
+
+procedure TMonetDBConnection.fsetTrace(value: boolean);
+begin
+  libmapi.mapi_trace(self.mapiref,value);
+end;
+
+function TMonetDBConnection.SaveLogfile(filename: string): boolean;
+var i:integer;
+begin
+  i:=libmapi.mapi_log(self.mapiref, putf8char(utf8encode(filename)));
+  if i=MOK then result:=true else result:=false;
+
+end;
+
 function TMonetDBConnection.ServerMessage: string;
   begin
     result:=utf8tostring( libmapi.mapi_get_motd(self.mapiref))  ;
@@ -188,6 +215,12 @@ procedure TMonetDBConnection.SetConnected(value: boolean);
           if mapiref=nil then self.Connect;
         end;
   end;
+
+procedure TMonetDBConnection.setTimeout(milliseconds: cardinal);
+begin
+  self.ftimeout := milliseconds;
+  libmapi.mapi_timeout(self.mapiref, milliseconds)  ;
+end;
 
 { TMonetDBQuery }
 
