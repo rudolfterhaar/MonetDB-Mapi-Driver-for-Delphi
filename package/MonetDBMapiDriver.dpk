@@ -31,7 +31,7 @@ requires
   rtl;
 
 contains
-  MonetDB.Wrapper in 'src\MonetDB.Wrapper.pas',
-  libmapi in 'src\libmapi.pas';
+  MonetDB.Wrapper in '..\src\MonetDB.Wrapper.pas',
+  libmapi in '..\src\libmapi.pas';
 
 end.
