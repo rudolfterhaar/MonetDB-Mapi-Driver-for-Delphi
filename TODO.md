@@ -6,6 +6,44 @@ A simple Mapi driver for Delphi is created.
 
 ### Backlog
 
+ - [ ] mapi_error
+ - [ ] *mapi_error_str
+ - [ ] *mapi_result_error
+ - [ ] *mapi_result_errorcode
+ - [ ] mapi_explain
+ - [ ] mapi_explain_query
+ - [ ] mapi_explain_result
+ - [ ] mapi_bind
+ - [ ] mapi_bind_var
+ - [ ] mapi_bind_numeric
+ - [ ] mapi_clear_bindings
+ - [ ] mapi_param
+ - [ ] mapi_param_type
+ - [ ] mapi_param_numeric
+ - [ ] mapi_param_string
+ - [ ] mapi_clear_params
+ - [ ] mapi_setAutocommit
+ - [ ] mapi_setAlgebra
+ - [ ] mapi_cache_limit
+ - [ ] mapi_cache_freeup
+ - [ ] mapi_quote
+ - [ ] mapi_unquote
+ - [ ] mapi_output
+ - [ ] mapi_stream_into
+ - [ ] mapi_profile
+ - [ ] mapi_timeout
+ - [ ] mapi_trace
+ - [ ] mapi_get_trace
+ - [ ] mapi_log
+ - [ ] mapi_get_name
+ - [ ] mapi_get_type
+ - [ ] mapi_get_table
+ - [ ] mapi_get_len
+ - [ ] mapi_get_dbname
+ - [ ] mapi_get_host
+ - [ ] mapi_get_user
+ - [ ] mapi_get_lang
+ - [ ] mapi_get_motd
 
 ### Todo
 
