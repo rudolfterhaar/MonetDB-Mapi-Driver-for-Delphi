@@ -81,30 +81,30 @@ type
        procedure fsetTrace(value:boolean);
        procedure setTimeout(milliseconds:cardinal);
      public
-         function ServerMessage:string;
-         function Ping:MapiMsg;       //Test availability of the server. Returns zero upon success.
-        procedure DestroyConnection;  //Terminate the session described by mid if not already done so, and free all resources. The handle cannot be used anymore
-        procedure Reconnect;          //Close the current channel (if still open) and re-establish a fresh connection. This will remove all global session variables.
+       function  ServerMessage:string;
+       function  Ping:MapiMsg;       //Test availability of the server. Returns zero upon success.
+       procedure DestroyConnection;  //Terminate the session described by mid if not already done so, and free all resources. The handle cannot be used anymore
+       procedure Reconnect;          //Close the current channel (if still open) and re-establish a fresh connection. This will remove all global session variables.
 
-        function OpenQuery(sql:string):TMonetDBQuery;        //You need to free this object after use..
-        function ExecSQL(sql:string):integer;  //returns rows affected
+       function  OpenQuery(sql:string):TMonetDBQuery;        //You need to free this object after use..
+       function  ExecSQL(sql:string):integer;  //returns rows affected
 
-        function SaveLogfile(filename:string):boolean;
+       function  SaveLogfile(filename:string):boolean;
 
-        property Trace    :boolean read fgetTrace write fsetTrace;
+       property  Trace    :boolean read fgetTrace write fsetTrace;
 
-        property timeout  :cardinal read ftimeout write settimeout;
+       property  timeout  :cardinal read ftimeout write settimeout;
 
-        property lang     : string  read fgetlang;
-        property dbname   : string  read fdbname   write fdbname;
-        property host     : string  read fhost     write fhost;
-        property port     : integer read fport     write fport;
-        property username : string  read fusername write fusername;
-        property password : string  read fpassword write fpassword;
-        property MapiError: MapiMsg read getMapiError ;
-        property MapiErrorString:string read getMapiErrorString;
+       property  lang     : string  read fgetlang;
+       property  dbname   : string  read fdbname   write fdbname;
+       property  host     : string  read fhost     write fhost;
+       property  port     : integer read fport     write fport;
+       property  username : string  read fusername write fusername;
+       property  password : string  read fpassword write fpassword;
+       property  MapiError: MapiMsg read getMapiError ;
+       property  MapiErrorString : string read getMapiErrorString;
 
-        property connected:boolean read fgetconnectionstatus write setconnected;
+       property  connected:boolean read fgetconnectionstatus write setconnected;
   end;
 
 implementation
