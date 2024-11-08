@@ -1,7 +1,10 @@
 # MonetDB Mapi Driver for Delphi
 
 This is a wrapper for the Mapi library of MonetDB.
+
 Hosted on [GitHub](https://github.com/rudolfterhaar/MapiDriver)
+
+[license.md](License.md)
 
 # ⚠️ Work in Progress
 
