@@ -8,6 +8,8 @@ This is a wrapper for the Mapi library of MonetDB.
 - No documentation yet
 - Delphi packages will be developed first
 - Lazarus packages will follow. 
+- Parameters    (I can use some help with understanding parameters in the monetdb context)
+
 
 # Mapi lib
 
