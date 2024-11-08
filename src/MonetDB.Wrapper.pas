@@ -13,6 +13,20 @@ type
   end;
 
   TMonetDBConnection = class;
+  TMonetDBQuery = class;
+
+  TRow = class
+    private
+      Query:TMonetDBQuery;
+      function fgetFieldCount:integer;
+      function FgetField(fieldno:integer):tfield;
+      function fgetFieldByName(name:string):TField;
+
+    public
+      property FieldCount:integer read fgetFieldCount;
+      property Field[index:integer]     : TField read FgetField;
+      property FieldByName[name:string] : TField read fgetFieldByName;
+  end;
 
   TMonetDBQuery = class
     private
@@ -20,29 +34,26 @@ type
        Handle:libmapi.MapiHdl;
        MapiMessage:MapiMsg;
        prepared:boolean;
-       function FgetField(fieldno:integer):tfield;
+       frow:trow;
+       function fgetRow(rowno:integer):trow;
 
-       function fgetFieldByName(name:string):TField;
     public
       sql:string;
       procedure Execute;
       procedure Prepare;
 
-      function FieldCount:integer;  // Return the number of fields in the current row.
       function RowCount:int64;      // If possible, return the number of rows in the last select call. A -1 is returned if this information is not available.
       function LastID:int64;        // If possible, return the last inserted id of auto_increment (or alike) column. A -1 is returned if this information is not available. We restrict this to single row inserts and one auto_increment column per table. If the restrictions do not hold, the result is unspecified.
       function RowsAffected:int64;  // Return the number of rows affected by a database update command such as SQL's INSERT/DELETE/UPDATE statements.
 
       function FetchRow    : integer;
       function FetchAllRows: int64;
-
-      function SeekRow(row:int64; whence:integer):MapiMsg;
       function FetchReset :MapiMsg;
 
-      property Field[index:integer]     : TField read FgetField;
-      property FieldByName[name:string] : TField read fgetFieldByName;
+      property Row[rowno:integer]:trow read fgetRow;    //no need to free row object.
 
       constructor create(_conn:tmonetdbconnection; _sql:string);
+      destructor destroy;
   end;
 
   TMonetDBConnection = class
@@ -64,7 +75,7 @@ type
         procedure DestroyConnection;  //Terminate the session described by mid if not already done so, and free all resources. The handle cannot be used anymore
         procedure Reconnect;          //Close the current channel (if still open) and re-establish a fresh connection. This will remove all global session variables.
 
-        function OpenQuery(sql:string):TMonetDBQuery;
+        function OpenQuery(sql:string):TMonetDBQuery;        //You need to free this object after use..
         function ExecSQL(sql:string):integer;  //returns rows affected
 
 
@@ -173,6 +184,13 @@ constructor TMonetDBQuery.create(_conn:tmonetdbconnection; _sql: string);
 begin
   sql:=_sql;
   conn:=_conn;
+  frow:=trow.Create;
+  frow.Query := self;
+end;
+
+destructor TMonetDBQuery.destroy;
+begin
+  self.frow.free;
 end;
 
 procedure TMonetDBQuery.Execute;
@@ -205,15 +223,27 @@ begin
   result:=libmapi.mapi_fetch_row(Handle);
 end;
 
-function TMonetDBQuery.FgetField(fieldno: integer): tfield;
+function TMonetDBQuery.fgetRow(rowno: integer): trow;
+var errcode:MapiMsg;
 begin
-  result.FieldName := utf8tostring( libmapi.mapi_get_name(handle,fieldno));
-  result.Value     := utf8tostring(libmapi.mapi_fetch_field(Handle,fieldno));
-  result.FieldType := utf8tostring( libmapi.mapi_get_type(handle,fieldno) );
+  errcode:=libmapi.mapi_seek_row(handle, rowno, MAPI_SEEK_SET);
+  {Reset the row pointer to the requested row number.
+   If whence is MAPI_SEEK_SET, rownr is the absolute row number (0 being the first row);
+   if whence is MAPI_SEEK_CUR, rownr is relative to the current row; if whence is MAPI_SEEK_END,
+                                                             rownr is relative to the last row.}
+  if errcode<>MOK then raise Exception.Create('Could not fetch row');
+  result:=frow;
+end;
+
+function TRow.FgetField(fieldno: integer): tfield;
+begin
+  result.FieldName := utf8tostring( libmapi.mapi_get_name(Query.handle,fieldno));
+  result.Value     := utf8tostring(libmapi.mapi_fetch_field(Query.Handle,fieldno));
+  result.FieldType := utf8tostring( libmapi.mapi_get_type(Query.handle,fieldno) );
 end;
 
 
-function TMonetDBQuery.fgetFieldByName(name: string): TField;
+function TRow.fgetFieldByName(name: string): TField;
 var col:integer ;
     f:tfield;
 begin
@@ -234,9 +264,9 @@ begin
     end;
 end;
 
-function TMonetDBQuery.FieldCount: integer;
+function TRow.fgetFieldCount: integer;
 begin
-  result:= libmapi.mapi_get_field_count(Handle);
+  result:= libmapi.mapi_get_field_count(Query.Handle);
 end;
 
 function TMonetDBQuery.LastID: int64;
@@ -264,11 +294,6 @@ function TMonetDBQuery.RowsAffected: int64;
 begin
   result:=libmapi.mapi_rows_affected(Handle);
 
-end;
-
-function TMonetDBQuery.SeekRow(row: int64; whence: integer): MapiMsg;
-begin
-  result:=libmapi.mapi_seek_row(handle, row, whence);
 end;
 
 end.
