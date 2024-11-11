@@ -4,7 +4,7 @@ This is a wrapper for the Mapi library of MonetDB.
 
 Hosted on [GitHub](https://github.com/rudolfterhaar/MapiDriver)
 
-[license.md](License.md)
+[license](License.md)
 
 # ⚠️ Work in Progress
 
@@ -13,6 +13,7 @@ Hosted on [GitHub](https://github.com/rudolfterhaar/MapiDriver)
 - Delphi packages will be developed first
 - Lazarus packages will follow. 
 - Parameters    (I can use some help with understanding parameters in the monetdb context)
+- Class Diagram [ClassDiagram](ClassDiagram.md)
 
 
 # Mapi lib

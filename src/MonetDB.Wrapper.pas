@@ -55,7 +55,6 @@ type
       function LastID:int64;        // If possible, return the last inserted id of auto_increment (or alike) column. A -1 is returned if this information is not available. We restrict this to single row inserts and one auto_increment column per table. If the restrictions do not hold, the result is unspecified.
       function RowsAffected:int64;  // Return the number of rows affected by a database update command such as SQL's INSERT/DELETE/UPDATE statements.
 
-
       property Row[rowno:integer]:trow read fgetRow;    //no need to free row object.
 
       constructor create(_conn:tmonetdbconnection; _sql:string);
@@ -100,7 +99,7 @@ type
        property  host     : string  read fhost     write fhost;
        property  port     : integer read fport     write fport;
        property  username : string  read fusername write fusername;
-       property  password : string  read fpassword write fpassword;
+       property  password : string  read fpassword write fpassword;        //  <-- in the future change this.
        property  MapiError: MapiMsg read getMapiError ;
        property  MapiErrorString : string read getMapiErrorString;
 
